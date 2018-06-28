@@ -18,13 +18,16 @@ package cn.lhfei.drill.resources;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -39,17 +42,37 @@ import org.springframework.web.bind.annotation.RestController;
 public class DrillResource extends AbstractResource {
 	
 	@RequestMapping(value = "/files", method = GET)
-	public String getFiles() throws ClassNotFoundException, SQLException {
+	public List<String> getFiles(@RequestParam Integer limit) throws ClassNotFoundException, SQLException {
 		LOG.debug(MARKER, "getFiles method execute ...");
+		String sql = "SELECT * FROM dfs.`/user/druid/benchmark/data/lineitem.tbl` LIMIT ?";
 		
-		Class.forName("org.apache.drill.jdbc.Driver");
-		Connection connection =DriverManager.getConnection("jdbc:drill:zk=10.182.60.8:2181,10.182.60.113:2181,10.182.60.142:2181,10.182.60.149:2181/drill/drillbits-li");
+		List<String> result = new ArrayList<>();
+		
+//		Class.forName("org.apache.drill.jdbc.Driver");
+//		Connection connection = DriverManager.getConnection("jdbc:drill:zk=host-10-182-60-8:2181,host-10-182-60-113:2181,host-10-182-60-142:2181,host-10-182-60-149:2181/drill/drillbits-li");
+		
+		/*Connection connection = dataSource.getConnection();
 		Statement st = connection.createStatement();
+		
 		ResultSet rs = st.executeQuery("SELECT * FROM dfs.`/user/druid/benchmark/data/lineitem.tbl` LIMIT 20");
 		while(rs.next()){
 			LOG.debug(MARKER, rs.getString(1));
-		}
+		}*/
 		
-		return "{}";
+		jdbcTemplate.query(sql, new Object[] {limit}, new RowMapper<List<String>>() {
+
+			@Override
+			public List<String> mapRow(ResultSet rs, int rowNum) throws SQLException {
+				while(rs.next()){
+					result.add(rs.getString(1));
+				}
+				return result;
+			}
+		});
+		
+		return result;
 	}
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 }

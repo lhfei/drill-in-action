@@ -11,3 +11,28 @@ logging:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
+
+# Druid datasource settings:
+spring:
+  datasource:
+    driver-class-name: org.apache.drill.jdbc.Driver
+    url:  jdbc:drill:zk:host-10-182-60-8:2181,host-10-182-60-113:2181,host-10-182-60-142:2181,host-10-182-60-149:2181/drill/drillbits-li
+    username: 
+    password: 
+
+    druid:
+      initial-size: 5
+      minIdle: 5
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filters: stat,wall,log4j
+      connectionProperties: druid.stat.mergeSql:true;druid.stat.slowSqlMillis:5000
+      #useGlobalDataSourceStat: true
