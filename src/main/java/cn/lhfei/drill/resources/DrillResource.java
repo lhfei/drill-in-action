@@ -62,7 +62,7 @@ public class DrillResource extends AbstractResource {
 		PreparedStatement ps = connection.prepareStatement(sql);
 		ps.setInt(1, limit);
 		
-		ResultSet rs = ps.executeQuery(sql);
+		ResultSet rs = ps.executeQuery();
 		
 		ObjectMapper mapper = new ObjectMapper();
 
