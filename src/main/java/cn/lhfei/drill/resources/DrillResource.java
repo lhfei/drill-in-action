@@ -20,11 +20,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Statement;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,8 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import io.netty.buffer.ByteBuf;
 
 /**
  * @version 0.1
@@ -52,17 +48,14 @@ public class DrillResource extends AbstractResource {
 	public ArrayNode getFiles(@RequestParam Integer limit) throws ClassNotFoundException, SQLException {
 		LOG.debug(MARKER, "getFiles method execute ...");
 		//String sql = "SELECT * FROM dfs.`/user/druid/benchmark/data/lineitem.tbl` LIMIT ?";
-		String sql = "SELECT * FROM hive.`benchmark.lineitem` LIMIT ?";
-		
-		List<String> result = new ArrayList<>();
+		String sql = "select * from hive.benchmark.lineitem limit 10";
 		
 		Class.forName("org.apache.drill.jdbc.Driver");
 		Connection connection = DriverManager.getConnection("jdbc:drill:zk=host-10-182-60-8:2181,host-10-182-60-113:2181,host-10-182-60-142:2181,host-10-182-60-149:2181/drill/drillbits-li");
 		
-		PreparedStatement ps = connection.prepareStatement(sql);
-		ps.setInt(1, limit);
+		Statement ps = connection.createStatement();
 		
-		ResultSet rs = ps.executeQuery();
+		ResultSet rs = ps.executeQuery(sql);
 		
 		ObjectMapper mapper = new ObjectMapper();
 
