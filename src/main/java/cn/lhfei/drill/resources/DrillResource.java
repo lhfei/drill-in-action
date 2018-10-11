@@ -52,7 +52,7 @@ public class DrillResource extends AbstractResource {
 	public ArrayNode getFiles(@RequestParam Integer limit) throws ClassNotFoundException, SQLException {
 		LOG.debug(MARKER, "getFiles method execute ...");
 		//String sql = "SELECT * FROM dfs.`/user/druid/benchmark/data/lineitem.tbl` LIMIT ?";
-		String sql = "SELECT * FROM hive.benchmark.lineitem LIMIT ?";
+		String sql = "SELECT * FROM hive.`benchmark.lineitem` LIMIT ?";
 		
 		List<String> result = new ArrayList<>();
 		
