@@ -1,5 +1,5 @@
 server:
-  port: 11000
+  port: 12000
   servlet:
     context-path: /api/v1
     
@@ -19,8 +19,7 @@ env:
     
 datasource:
   driver-class-name: org.apache.drill.jdbc.Driver
-  jdbc-url: jdbc:drill:zk=a01-r03-i164-107-515wbkc.jd.local:2181,a01-r03-i164-101-515w96w.jd.local:2181,a01-r03-i164-108-515wble.jd.local:2181/drill/DTHINKER-BITS
-  username: 
+  jdbc-url: host-10-182-60-8:2181,host-10-182-60-113:2181,host-10-182-60-142:2181,host-10-182-60-149:2181/drill/drillbits-li
   password:
   c3p0-max-pool-size: 1000
   c3p0-min-pool-size: 5
