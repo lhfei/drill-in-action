@@ -49,20 +49,40 @@ import okhttp3.Response;
  * @Created on Jun 27, 2018
  */
 @RestController
-@RequestMapping("/")
+@RequestMapping(value = "/", consumes = "application/json")
 public class DrillResource extends AbstractResource {
 	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 	private static final Moshi MOSHI = new Moshi.Builder().build();
 	
 	
-	@RequestMapping(value = "/query", method = POST)
-	public QueryResult query(@RequestBody QueryModel queryModel) throws ClassNotFoundException, SQLException {
+	@RequestMapping(value = "/query2", method = POST)
+	public QueryResult query2(@RequestBody QueryModel queryModel) throws ClassNotFoundException, SQLException {
 		
 		LOG.info("Query: {}", queryModel);
 		
 		QueryResult result = queryWrapper.query(queryModel.getQuery(), queryModel.getParams());
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/query", method = POST)
+	public String query(@RequestBody QueryModel queryModel) throws ClassNotFoundException, SQLException, IOException {
+		final String json = "{\"queryType\": \"SQL\", \"query\": \"" + queryModel.getQuery() + "\"}";
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(JSON, json);
+		
+		OkHttpClient client = new OkHttpClient();
+
+	    // Create request for Drill remote resource.
+	    Request request = new Request.Builder()
+	        .url(getRandomServer(DrillOperationEnum.QUERY))
+	        .post(body)
+	        .build();
+
+	    // Execute the request and retrieve the response.
+		try (Response response = client.newCall(request).execute()) {
+			// Deserialize HTTP response to concrete type.
+			return response.body().string();
+		}
 	}
 	
 	@RequestMapping(value = "/databases", method = GET)
@@ -87,7 +107,30 @@ public class DrillResource extends AbstractResource {
 	
 	@RequestMapping(value = "/database/{database}/tables", method = GET)
 	public String getTables(@PathVariable("") String database) throws ClassNotFoundException, SQLException, IOException {
-		final String json = "{\"queryType\": \"SQL\", \"query\": \"SHOW TABLES IN "+database+"\"}";
+		final String json = "{\"queryType\": \"SQL\", \"query\": \"SHOW TABLES IN " + database + "\"}";
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(JSON, json);
+		
+		OkHttpClient client = new OkHttpClient();
+
+	    // Create request for Drill remote resource.
+	    Request request = new Request.Builder()
+	        .url(getRandomServer(DrillOperationEnum.QUERY))
+	        .post(body)
+	        .build();
+
+	    // Execute the request and retrieve the response.
+		try (Response response = client.newCall(request).execute()) {
+			// Deserialize HTTP response to concrete type.
+			return response.body().string();
+		}
+	}
+	
+	
+	@RequestMapping(value = "/database/{database}/table/{tableName}", method = GET)
+	public String getTable(@PathVariable("") String database, @PathVariable("") String tableName)
+			throws ClassNotFoundException, SQLException, IOException {
+		String fullName = database + "." + tableName;
+		final String json = "{\"queryType\": \"SQL\", \"query\": \"DESC " + fullName + "\"}";
 		okhttp3.RequestBody body = okhttp3.RequestBody.create(JSON, json);
 		
 		OkHttpClient client = new OkHttpClient();
