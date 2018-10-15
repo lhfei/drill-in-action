@@ -49,7 +49,7 @@ import okhttp3.Response;
  * @Created on Jun 27, 2018
  */
 @RestController
-@RequestMapping(value = "/", consumes = "application/json")
+@RequestMapping(value = "/")
 public class DrillResource extends AbstractResource {
 	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 	private static final Moshi MOSHI = new Moshi.Builder().build();
