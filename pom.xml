@@ -24,6 +24,7 @@
 		<java.version>1.8</java.version>
 		<drill.version>1.14.0</drill.version>
 		<c3p0.version>0.9.1.2</c3p0.version>
+		<okhttp3.version>3.11.0</okhttp3.version>
 	</properties>
 
 	<dependencies>
@@ -84,6 +85,16 @@
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
 			<version>3.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>${okhttp3.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.moshi</groupId>
+			<artifactId>moshi</artifactId>
+			<version>1.7.0</version>
 		</dependency>
 	</dependencies>
 

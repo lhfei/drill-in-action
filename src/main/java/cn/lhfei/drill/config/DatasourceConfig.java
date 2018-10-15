@@ -49,27 +49,27 @@ private Logger LOG = LoggerFactory.getLogger(DatasourceConfig.class);
         ComboPooledDataSource dataSource = new ComboPooledDataSource("ck-111");
 
         try {
-            dataSource.setDriverClass(dsPros.getDriverClassName());
+            dataSource.setDriverClass(envParams.getDatasource().getDriverClassName());
         } catch (PropertyVetoException pve){
-			LOG.debug("Cannot load datasource driver ({)} : {}", dsPros.getJdbcUrl(), pve.getMessage());
+			LOG.debug("Cannot load datasource driver ({)} : {}", envParams.getDatasource().getJdbcUrl(), pve.getMessage());
             return null;
         }
-        dataSource.setJdbcUrl(dsPros.getJdbcUrl());
-        dataSource.setUser(dsPros.getUsername());
-        dataSource.setPassword(dsPros.getPassword());
-        dataSource.setMinPoolSize(dsPros.getC3p0MinPoolSize());
-        dataSource.setMaxPoolSize(dsPros.getC3p0MaxPoolSize());
-        dataSource.setInitialPoolSize(dsPros.getInitialPoolSize());
-        dataSource.setMaxIdleTime(dsPros.getMaxIdleTime());
-        dataSource.setAcquireIncrement(dsPros.getAcquireIncrement());
-        dataSource.setMaxStatements(dsPros.getMaxStatements());
-        dataSource.setMaxStatementsPerConnection(dsPros.getMaxStatementsPerConnection());
-        dataSource.setNumHelperThreads(dsPros.getNumHelperThreads());
-        dataSource.setPropertyCycle(dsPros.getPropertyCycle());
+        dataSource.setJdbcUrl(envParams.getDatasource().getJdbcUrl());
+        dataSource.setUser(envParams.getDatasource().getUsername());
+        dataSource.setPassword(envParams.getDatasource().getPassword());
+        dataSource.setMinPoolSize(envParams.getDatasource().getC3p0MinPoolSize());
+        dataSource.setMaxPoolSize(envParams.getDatasource().getC3p0MaxPoolSize());
+        dataSource.setInitialPoolSize(envParams.getDatasource().getInitialPoolSize());
+        dataSource.setMaxIdleTime(envParams.getDatasource().getMaxIdleTime());
+        dataSource.setAcquireIncrement(envParams.getDatasource().getAcquireIncrement());
+        dataSource.setMaxStatements(envParams.getDatasource().getMaxStatements());
+        dataSource.setMaxStatementsPerConnection(envParams.getDatasource().getMaxStatementsPerConnection());
+        dataSource.setNumHelperThreads(envParams.getDatasource().getNumHelperThreads());
+        dataSource.setPropertyCycle(envParams.getDatasource().getPropertyCycle());
 
         return dataSource;
     }
 	
 	@Autowired
-	private DatasourceProperties dsPros;
+	private EnvironmentProperties envParams;
 }

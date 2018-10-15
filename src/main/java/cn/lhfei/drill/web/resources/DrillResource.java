@@ -19,7 +19,9 @@ package cn.lhfei.drill.web.resources;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,9 +29,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.squareup.moshi.Moshi;
+
+import cn.lhfei.drill.config.EnvironmentProperties;
+import cn.lhfei.drill.config.constant.DrillOperationEnum;
 import cn.lhfei.drill.web.model.QueryModel;
 import cn.lhfei.drill.web.model.QueryResult;
 import cn.lhfei.drill.wrapper.QueryWrapper;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * @version 0.1
@@ -41,6 +51,9 @@ import cn.lhfei.drill.wrapper.QueryWrapper;
 @RestController
 @RequestMapping("/")
 public class DrillResource extends AbstractResource {
+	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+	private static final Moshi MOSHI = new Moshi.Builder().build();
+	
 	
 	@RequestMapping(value = "/query", method = POST)
 	public QueryResult query(@RequestBody QueryModel queryModel) throws ClassNotFoundException, SQLException {
@@ -53,19 +66,71 @@ public class DrillResource extends AbstractResource {
 	}
 	
 	@RequestMapping(value = "/databases", method = GET)
-	public QueryResult getDatabases() throws ClassNotFoundException, SQLException {
-		final String sql = "SHOW DATABASES";
+	public String getDatabases() throws ClassNotFoundException, SQLException, IOException {
+		final String json = "{\"queryType\": \"SQL\", \"query\": \"SHOW DATABASES\"}";
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(JSON, json);
 		
-		return queryWrapper.query(sql, null);
+		OkHttpClient client = new OkHttpClient();
+
+	    // Create request for Drill remote resource.
+	    Request request = new Request.Builder()
+	        .url(getRandomServer(DrillOperationEnum.QUERY))
+	        .post(body)
+	        .build();
+
+	    // Execute the request and retrieve the response.
+		try (Response response = client.newCall(request).execute()) {
+			// Deserialize HTTP response to concrete type.
+			return response.body().string();
+		}
 	}
 	
 	@RequestMapping(value = "/database/{database}/tables", method = GET)
-	public QueryResult getTables(@PathVariable("") String database) throws ClassNotFoundException, SQLException {
-		final String sql = "SHOW TABLES IN ?";
+	public String getTables(@PathVariable("") String database) throws ClassNotFoundException, SQLException, IOException {
+		final String json = "{\"queryType\": \"SQL\", \"query\": \"SHOW TABLES IN "+database+"\"}";
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(JSON, json);
 		
-		return queryWrapper.query(sql, new Object[] {database});
+		OkHttpClient client = new OkHttpClient();
+
+	    // Create request for Drill remote resource.
+	    Request request = new Request.Builder()
+	        .url(getRandomServer(DrillOperationEnum.QUERY))
+	        .post(body)
+	        .build();
+
+	    // Execute the request and retrieve the response.
+		try (Response response = client.newCall(request).execute()) {
+			// Deserialize HTTP response to concrete type.
+			return response.body().string();
+		}
+	}
+	
+	public String getRandomServer(DrillOperationEnum type) {
+		String endpoint = "";
+		int min = 0, max = envParams.getDrillServers().length - 1;
+		Random random = new Random();
+		StringBuilder sb = new StringBuilder(envParams.getDrillServerProtocol());
+		sb.append("://");
+		
+		int serverIndex = random.nextInt(max - min + 1) + min;
+		
+		sb.append(envParams.getDrillServers()[serverIndex]);
+		
+		sb.append("/");
+		sb.append(type.getType());
+		
+		endpoint = sb.toString();
+		
+		LOG.info("Query: dispatch to : {}", endpoint);
+		
+		return endpoint;
 	}
 	
 	@Autowired
 	private QueryWrapper queryWrapper;
+	
+	@Autowired
+	private EnvironmentProperties envParams;
+	
+	
 }

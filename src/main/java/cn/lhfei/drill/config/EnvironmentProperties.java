@@ -33,5 +33,42 @@ public class EnvironmentProperties {
 		this.params = params;
 	}
 
+	public DatasourceProperties getDatasource() {
+		return datasource;
+	}
+
+	public void setDatasource(DatasourceProperties datasource) {
+		this.datasource = datasource;
+	}
+
+	public int getDrillServerPort() {
+		return drillServerPort;
+	}
+
+	public void setDrillServerPort(int drillServerPort) {
+		this.drillServerPort = drillServerPort;
+	}
+
+	public String getDrillServerProtocol() {
+		return drillServerProtocol;
+	}
+
+	public void setDrillServerProtocol(String drillServerProtocol) {
+		this.drillServerProtocol = drillServerProtocol;
+	}
+
+	public String[] getDrillServers() {
+		return drillServers;
+	}
+
+	public void setDrillServers(String[] drillServers) {
+		this.drillServers = drillServers;
+	}
+
 	private ParameterProperties params;
+	private DatasourceProperties datasource;
+	private int drillServerPort;
+	private String drillServerProtocol;
+	private String[] drillServers;
+
 }
