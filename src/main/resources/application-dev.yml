@@ -1,0 +1,35 @@
+server:
+  port: 11000
+  servlet:
+    context-path: /api/v1
+    
+logging:
+  level:
+    .: info
+    cn.lhfei.exp: debug
+    org.springframework: info
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Enviroment Properties
+env:
+  params:
+    cached: true
+    
+datasource:
+  driver-class-name: org.apache.drill.jdbc.Driver
+  jdbc-url: jdbc:drill:zk=a01-r03-i164-107-515wbkc.jd.local:2181,a01-r03-i164-101-515w96w.jd.local:2181,a01-r03-i164-108-515wble.jd.local:2181/drill/DTHINKER-BITS
+  username: 
+  password:
+  c3p0-max-pool-size: 1000
+  c3p0-min-pool-size: 5
+  initial-pool-size: 5
+  pool-idle-period: 10800
+  max-idle-time: 21600
+  acquire-increment: 5
+  max-statements: 10
+  max-statements-per-connection: 5
+  num-helper-threads: 10
+  property-cycle: 600
+

@@ -14,6 +14,9 @@ logging:
 
 # Druid datasource settings:
 spring:
+  profiles:
+    active:
+    - dev
   datasource:
     driver-class-name: org.apache.drill.jdbc.Driver
     url:  jdbc:drill:zk=a01-r03-i164-107-515wbkc.jd.local:2181,a01-r03-i164-101-515w96w.jd.local:2181,a01-r03-i164-108-515wble.jd.local:2181/drill/DTHINKER-BITS

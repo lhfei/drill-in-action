@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package cn.lhfei.drill.resources;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
+package cn.lhfei.drill.config;
 
 /**
  * @version 0.1
  *
  * @author Hefei Li
  *
- * @Created on Jun 27, 2018
+ * @Created 10月 15, 2018
  */
-public abstract class AbstractResource {
-	protected Logger LOG = LoggerFactory.getLogger(this.getClass());
-	protected Marker MARKER = MarkerFactory.getMarker("CTL-");
+public class ParameterProperties {
+
+	public boolean isCached() {
+		return cached;
+	}
+
+	public void setCached(boolean cached) {
+		this.cached = cached;
+	}
+
+	private boolean cached;
 }
