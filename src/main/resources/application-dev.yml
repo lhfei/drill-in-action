@@ -19,7 +19,7 @@ env:
     
 datasource:
   driver-class-name: org.apache.drill.jdbc.Driver
-  jdbc-url: host-10-182-60-8:2181,host-10-182-60-113:2181,host-10-182-60-142:2181,host-10-182-60-149:2181/drill/drillbits-li
+  jdbc-url: jdbc:drill:zk=host-10-182-60-8:2181,host-10-182-60-113:2181,host-10-182-60-142:2181,host-10-182-60-149:2181/drill/drillbits-li
   username: 
   password:
   c3p0-max-pool-size: 1000
