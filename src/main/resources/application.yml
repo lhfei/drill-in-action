@@ -16,7 +16,7 @@ logging:
 spring:
   profiles:
     active:
-    - dev
+    - prod
   datasource:
     driver-class-name: org.apache.drill.jdbc.Driver
     url: jdbc:drill:zk=host-10-182-60-8:2181,host-10-182-60-113:2181,host-10-182-60-142:2181,host-10-182-60-149:2181/drill/drillbits-li

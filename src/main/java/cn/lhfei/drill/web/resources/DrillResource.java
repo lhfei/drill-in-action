@@ -159,6 +159,11 @@ public class DrillResource extends AbstractResource {
 		
 		sb.append(envParams.getDrillServers()[serverIndex]);
 		
+		// append port number
+		sb.append(":");
+		sb.append(envParams.getDrillServerPort());
+		
+		// append drill RESTful end-point
 		sb.append("/");
 		sb.append(type.getType());
 		

@@ -1,0 +1,38 @@
+server:
+  port: 12000
+  servlet:
+    context-path: /api/v1
+    
+logging:
+  level:
+    .: info
+    cn.lhfei.exp: debug
+    org.springframework: info
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Enviroment Properties
+env:
+  drill-servers:
+  - 172.23.239.102
+  - 172.23.239.126
+  drill-server-port: 8047
+  drill-server-protocol: http
+  
+  datasource:
+    driver-class-name: org.apache.drill.jdbc.Driver
+    jdbc-url: jdbc:drill:zk=host-10-182-60-8:2181,host-10-182-60-113:2181,host-10-182-60-142:2181,host-10-182-60-149:2181/drill/drillbits-li
+    username: 
+    password:
+    c3p0-max-pool-size: 1000
+    c3p0-min-pool-size: 5
+    initial-pool-size: 5
+    pool-idle-period: 10800
+    max-idle-time: 21600
+    acquire-increment: 5
+    max-statements: 10
+    max-statements-per-connection: 5
+    num-helper-threads: 10
+    property-cycle: 600
+
