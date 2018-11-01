@@ -22,6 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,8 +71,10 @@ public class DrillResource extends AbstractResource {
 		final String json = "{\"queryType\": \"SQL\", \"query\": \"" + queryModel.getQuery() + "\"}";
 		okhttp3.RequestBody body = okhttp3.RequestBody.create(JSON, json);
 		
-		OkHttpClient client = new OkHttpClient();
-
+		OkHttpClient client = buildHttpClient();
+		
+		LOG.info("SQL: {}", queryModel.getQuery());
+		
 	    // Create request for Drill remote resource.
 	    Request request = new Request.Builder()
 	        .url(getRandomServer(DrillOperationEnum.QUERY))
@@ -110,7 +113,7 @@ public class DrillResource extends AbstractResource {
 		final String json = "{\"queryType\": \"SQL\", \"query\": \"SHOW TABLES IN " + database + "\"}";
 		okhttp3.RequestBody body = okhttp3.RequestBody.create(JSON, json);
 		
-		OkHttpClient client = new OkHttpClient();
+		OkHttpClient client = buildHttpClient();
 
 	    // Create request for Drill remote resource.
 	    Request request = new Request.Builder()
@@ -133,7 +136,7 @@ public class DrillResource extends AbstractResource {
 		final String json = "{\"queryType\": \"SQL\", \"query\": \"DESC " + fullName + "\"}";
 		okhttp3.RequestBody body = okhttp3.RequestBody.create(JSON, json);
 		
-		OkHttpClient client = new OkHttpClient();
+		OkHttpClient client = buildHttpClient();
 
 	    // Create request for Drill remote resource.
 	    Request request = new Request.Builder()
@@ -172,6 +175,16 @@ public class DrillResource extends AbstractResource {
 		LOG.info("Query: dispatch to : {}", endpoint);
 		
 		return endpoint;
+	}
+	
+	private OkHttpClient buildHttpClient() {
+		OkHttpClient client = new OkHttpClient.Builder()
+				.connectTimeout(10, TimeUnit.MINUTES)
+		        .writeTimeout(10, TimeUnit.MINUTES)
+		        .readTimeout(10, TimeUnit.MINUTES)
+		        .build();
+		
+		return client;
 	}
 	
 	@Autowired
